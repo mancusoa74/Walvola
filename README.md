@@ -4,4 +4,12 @@ Realizzazione sistema di valvole termostatiche per termosifoni casalinghi con co
 
 http://mancusoa74.blogspot.it/2016/01/walvola.html
 
+Questo progetto e' formato da 3 parti principali:
+
+*Hardware: proetto Fritzing del controller della valvola basato su ESP8266-01 e ESP8266-12
+*Software:
+        *Walvola: software di gestione della valvola che gira su ESP8266-01 - ESP8266-12
+        *iHeating: semplice web application basata su Framework7 per controllo valvole
+
+
 
