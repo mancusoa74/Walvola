@@ -1,0 +1,18 @@
+CACHE MANIFEST
+# Ver 1.2.b
+
+# Add the entire internet to the "white list" of sites that may be accessed by this site.
+# This is needed for TypeKit and Google Analytics
+NETWORK:
+*
+
+# The following files are explicitly cached -
+CACHE:
+appHeating.html
+js/appHeating.js
+js/framework7.min.js
+js/framework7.min.js.map
+js/keen.min.js
+js/mqttws31.js
+css/framework7.ios.colors.min.css
+css/framework7.ios.min.css
