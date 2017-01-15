@@ -13,4 +13,4 @@ Questo progetto e' formato da 3 parti principali:
 **Software**
 
 * [**Walvola**](https://github.com/mancusoa74/Walvola/tree/master/Software/Walvola): software di gestione della valvola che gira su ESP8266-01 - ESP8266-12
-* [**iHeating**](http://mancusoa74.blogspot.it/): semplice web application basata su Framework7 per controllo valvole
+* [**iHeating**](https://github.com/mancusoa74/Walvola/tree/master/Software/iHeating): semplice web application basata su Framework7 per controllo valvole
