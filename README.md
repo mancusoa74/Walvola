@@ -6,7 +6,7 @@ Realizzazione sistema di valvole termostatiche per termosifoni casalinghi con co
 
 Questo progetto e' formato da 3 parti principali:
 
-[**Hardware**](https://github.com/mancusoa74/Walvola/tree/master/Hardware)
+**Hardware**
 [Progetto](https://github.com/mancusoa74/Walvola/tree/master/Hardware) Fritzing del controller della valvola basato su ESP8266-01 e ESP8266-12
 
 **Software**
