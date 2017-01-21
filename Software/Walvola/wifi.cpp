@@ -1,6 +1,6 @@
 #include "wifi.h"
 
-const char* wifi_ssid   = "YOUR WIFI SSID";     //your Wifi SSID
+const char* wifi_ssid   = "YOUR WIFI SSID";                     //your Wifi SSID
 const char* wifi_passwd = "YOUE WIFI PASSWORD"; //your wifi password
 WiFiClient wifi_client;
 

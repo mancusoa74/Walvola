@@ -87,28 +87,34 @@ void GPIO_init()
 //spin the motor clockwise
 void motor_right()
 {
+#ifdef WALVOLA_ROLE 
         digitalWrite(GPIO_MOTOR_LEFT, LOW);
         digitalWrite(GPIO_MOTOR_RIGHT, HIGH);   
         log("Motor RIGHT.........");
         delay(200);
+#endif
 }
 
 //sping the motor counter clockwise
 void motor_left()
 {
+#ifdef WALVOLA_ROLE 
         digitalWrite(GPIO_MOTOR_LEFT, HIGH);
         digitalWrite(GPIO_MOTOR_RIGHT, LOW);      
         log("Motor LEFT.........");
         delay(200);
+#endif
 }
 
 //stop the motor spinning
 void motor_off()
 {
+#ifdef WALVOLA_ROLE 
         digitalWrite(GPIO_MOTOR_LEFT, LOW);
         digitalWrite(GPIO_MOTOR_RIGHT, LOW);      
         log("Motor OFF.........");
         delay(200);
+#endif
 }
 
 //turn IRB ready led

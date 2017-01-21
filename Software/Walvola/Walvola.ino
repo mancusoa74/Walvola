@@ -2,6 +2,7 @@
 #Author:   Antonio Mancuso
 #Purpose:  Walvola: code to run on any SMHA esp8266-01/12 module. This code can impersonate different roles
 
+#Version:  1.4 - 21/01/2017 - replacing  www.timeapi.org as this service is not available anymore
 #Version:  1.3 - 11/01/2017 - clean up for publishing on github - Teleram disbale due to some issue with SSL https://github.com/espressif/ESP8266_MESH_DEMO/issues/19 - https://github.com/esp8266/Arduino/issues/1375
 #Version:  1.2 - 24/12/2016 - adding OTA support
 #Version:  1.1 - 08/12/2016 - intrducing deep_sleep mode
