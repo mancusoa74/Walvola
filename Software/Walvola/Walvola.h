@@ -36,15 +36,15 @@ extern "C"
  * =========== Global defines to configure behavior ===========
 */
 
-//#define WALVOLA_DEEP_SLEEP_MODE  //uncomment to enable deep sleep mode
-#define WALVOLA_MODEM_SLEEP_MODE //uncomment to enable modem sleep mode
-//#define WALVOLA_ROLE             //code behaves as a Walvola http://mancusoa74.blogspot.it/2017/01/come-aggiungere-il-controllo-wireless.html
-#define IRB_ROLE                 //code behaves as a IRB http://mancusoa74.blogspot.it/2015/11/internet-relay-board-v2.html
-//#define OTA_MODE                 //uncomment to enable OTA software upgrade http://esp8266.github.io/Arduino/versions/2.0.0/doc/ota_updates/ota_updates.html#web-browser
+#define WALVOLA_DEEP_SLEEP_MODE  //uncomment to enable deep sleep mode
+//#define WALVOLA_MODEM_SLEEP_MODE //uncomment to enable modem sleep mode
+#define WALVOLA_ROLE             //code behaves as a Walvola http://mancusoa74.blogspot.it/2017/01/come-aggiungere-il-controllo-wireless.html
+//#define IRB_ROLE                 //code behaves as a IRB http://mancusoa74.blogspot.it/2015/11/internet-relay-board-v2.html
+#define OTA_MODE                 //uncomment to enable OTA software upgrade http://esp8266.github.io/Arduino/versions/2.0.0/doc/ota_updates/ota_updates.html#web-browser
 
-#define DEBUG              1           //1=enable DEBUG mode; 0=disble debug mode
+#define DEBUG              0           //1=enable DEBUG mode; 0=disble debug mode
 #define MQTT_DEBUG         1           //1=enable MQTT DEBUG mode; 0=disble MQTT debug mode; post debug message to a /debug topic
-#define VERSION            "v1.4(00001)" 
+#define VERSION            "v1.4.1(00001)" 
 #define SERIAL_SPEED       115200
 #define SERIAL_INIT_DELAY  10
 #define WALVOLA_DELAY_ON   35000       //time (ms) for which the walvola motor is activated to open the walvola

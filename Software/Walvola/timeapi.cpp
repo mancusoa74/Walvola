@@ -17,6 +17,19 @@ int month2index (String month)
         return 0;
 }
 
+//helper function which pad number with 0 if necessary
+String zero_padding(byte num)
+{
+        String padding;
+        
+        if (num < 10)
+                padding = String(0) + String(num);
+        else
+                padding = String(num);
+        
+        return padding;
+}
+               
 String get_web_time()
 {
         int retry = 0;
@@ -73,17 +86,11 @@ String get_web_time()
         
         String raw_timestamp = html.substring(date_start + 11, date_end - 4); //get the timestamp as provided (i.e Sat, 21 Jan 2017 13:42:08)
         String year = raw_timestamp.substring(7,11);  //get the year         
+        String month = zero_padding(month2index(raw_timestamp.substring(3,6)));  //get month string and convert to month number with padding
         String day = raw_timestamp.substring(0,2);    //get the day
         //for hh we might have issues with daylight saving
-        String hh = String(raw_timestamp.substring(12,14).toInt() + 1); // get the hour, convert to int, add one as Italy is GMT+1, convert back o string
+        String hh = zero_padding(raw_timestamp.substring(12,14).toInt() + 1); // get the hour, convert to int, add one as Italy is GMT+1, convert back o string
         String mm = raw_timestamp.substring(15,17); //get the minutes
-        int month_num = month2index(raw_timestamp.substring(3,6));  //get month string and convert to month number
-        String month;
-
-        if (month_num < 10)
-                month = String(0) + String(month_num);
-        else
-                month = String(month_num);
         
         String timestamp = year + "-" + month + "-" + day + "--" + hh + "-" + mm + "-00"; //build timestamp in expected format
         

@@ -2,19 +2,20 @@
 #Author:   Antonio Mancuso
 #Purpose:  Walvola: code to run on any SMHA esp8266-01/12 module. This code can impersonate different roles
 
-#Version:  1.4 - 21/01/2017 - replacing  www.timeapi.org as this service is not available anymore
-#Version:  1.3 - 11/01/2017 - clean up for publishing on github - Teleram disbale due to some issue with SSL https://github.com/espressif/ESP8266_MESH_DEMO/issues/19 - https://github.com/esp8266/Arduino/issues/1375
-#Version:  1.2 - 24/12/2016 - adding OTA support
-#Version:  1.1 - 08/12/2016 - intrducing deep_sleep mode
-#Version:  1.0 - 01/12/2016 - adding dynamic WALVOLA_SLEEP_PERIOD and WALVOLA_SLEEP_DELAY based on time of the day
-#Version:  0.9 - 27/11/2016 - switching to mutiple queues model
-#Version:  0.8 - 24/11/2016 - code refactoring
-#Version:  0.7 - 20/11/2016 - Adding WiFi OFF period
-#Version:  0.6 - 13/11/2016 - Switching to CloudMQTT as PubNub looks like is not working anymore and adding voltage post to Keen.io
-#Version:  0.5 - 06/11/2016 - Adding Telegram Bot support
-#Version:  0.4 - 04/11/2016 - Adding support for IRB
-#Version:  0.3 - 18/09/2016 - Removal of ArduinoJson library and manual JSON parsing
-#Version:  0.2 - 18/09/2016 - clean up and MQTT message processing logic
+#Version:  1.4.1 - 22/01/2017 - fixing time calculation
+#Version:  1.4   - 21/01/2017 - replacing  www.timeapi.org as this service is not available anymore   
+#Version:  1.3   - 11/01/2017 - clean up for publishing on github - Teleram disbale due to some issue with SSL https://github.com/espressif/ESP8266_MESH_DEMO/issues/19 - https://github.com/esp8266/Arduino/issues/1375
+#Version:  1.2   - 24/12/2016 - adding OTA support
+#Version:  1.1   - 08/12/2016 - intrducing deep_sleep mode
+#Version:  1.0   - 01/12/2016 - adding dynamic WALVOLA_SLEEP_PERIOD and WALVOLA_SLEEP_DELAY based on time of the day
+#Version:  0.9   - 27/11/2016 - switching to mutiple queues model
+#Version:  0.8   - 24/11/2016 - code refactoring
+#Version:  0.7   - 20/11/2016 - Adding WiFi OFF period
+#Version:  0.6   - 13/11/2016 - Switching to CloudMQTT as PubNub looks like is not working anymore and adding voltage post to Keen.io
+#Version:  0.5   - 06/11/2016 - Adding Telegram Bot support
+#Version:  0.4   - 04/11/2016 - Adding support for IRB
+#Version:  0.3   - 18/09/2016 - Removal of ArduinoJson library and manual JSON parsing
+#Version:  0.2   - 18/09/2016 - clean up and MQTT message processing logic
 */
 
 #include "Walvola.h"
