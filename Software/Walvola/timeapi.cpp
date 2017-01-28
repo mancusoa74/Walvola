@@ -84,15 +84,16 @@ String get_web_time()
         int date_start = html.indexOf("Date"); //identify the Date in the http reponse
         int date_end = html.indexOf("GMT");
         
-        String raw_timestamp = html.substring(date_start + 11, date_end - 4); //get the timestamp as provided (i.e Sat, 21 Jan 2017 13:42:08)
+        String raw_timestamp = html.substring(date_start + 11, date_end - 1 ); //get the timestamp as provided (i.e Sat, 21 Jan 2017 13:42:08)
         String year = raw_timestamp.substring(7,11);  //get the year         
         String month = zero_padding(month2index(raw_timestamp.substring(3,6)));  //get month string and convert to month number with padding
         String day = raw_timestamp.substring(0,2);    //get the day
         //for hh we might have issues with daylight saving
         String hh = zero_padding(raw_timestamp.substring(12,14).toInt() + 1); // get the hour, convert to int, add one as Italy is GMT+1, convert back o string
         String mm = raw_timestamp.substring(15,17); //get the minutes
+        String ss = raw_timestamp.substring(18,20); //get the seconds
         
-        String timestamp = year + "-" + month + "-" + day + "--" + hh + "-" + mm + "-00"; //build timestamp in expected format
+        String timestamp = year + "-" + month + "-" + day + "--" + hh + "-" + mm + "-" + ss; //build timestamp in expected format
         
         log("TIMESTAMP:");
         log(raw_timestamp);
