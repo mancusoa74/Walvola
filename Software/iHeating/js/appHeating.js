@@ -142,6 +142,15 @@ function mqtt_process_mex(mex){
     
     var mqtt_mex = JSON.parse(mex); 
     
+    //console.log(typeof mqtt_mex);
+    // console.log(m.mqtt);
+    // if (typeof m == "string") 
+    //     mqtt_mex = JSON.parse(m).mqtt;
+    // else 
+    //     mqtt_mex = JSON.parse(m.mqtt);
+
+    //mqtt_mex = m;
+
     console.log(mqtt_mex);
     console.log(mqtt_mex.time);
     console.log(mqtt_mex.src);
@@ -163,13 +172,14 @@ function mqtt_process_mex(mex){
         console.log(current_time - mex_time);
         
 
-        if ((current_time - mex_time) < 700000) {
+        // if ((current_time - mex_time) < 700000) {
+        if ((current_time - mex_time) < 1050000) {
             console.log("messagio aggiornato");
             if (mqtt_mex.src == APPID)
                 console.log("discarding mqtt mesaage as sent by myself");
             else {
                 console.log("processing mqtt message");
-                //{"src":"valvola_src", label" : "SALONE", "type": "REPLY", "cmd":"STATUS","value": {"voltage":"2.86", "state":"OFF"}}
+                //{"src":"walvola03", label" : "SALONE", "type": "REPLY", "cmd":"STATUS","value": {"voltage":"2.86", "state":"OFF"}}
                 if (mqtt_mex.type == TYPE_REPLY && mqtt_mex.cmd == CMD_GET_STATUS) {
                     console.log("received STATUS replay message from walvola: " + mqtt_mex.src + " value = " + mqtt_mex.value.voltage);
                     add_update_walvola(mqtt_mex);
@@ -204,9 +214,10 @@ function add_update_walvola(mqtt_mex) {
     var html = `<li class="swipeout" id="#WALVOLA_ID#-swipeout">
                     <div class="swipeout-content item-content">
                       <div class="item-inner">
-                        <div class="item-title" id="t1">#WALVOLA_LABEL#</div>
-                        <div class="item-after"><span class="badge">#WALVOLA_VOLT#</span></div>
-                        <div class="item-after"><span id="#WALVOLA_ID#-badge" class="badge #WALVOLA_STATE_CLASS#">#WALVOLA_STATE#</span></div>
+                        <div class="item-title col1" id="t1">#WALVOLA_LABEL#</div>
+                        <div class="item-after col2"><span class="badge">#WALVOLA_TIME#</span></div>
+                        <div class="item-after col3"><span class="badge">#WALVOLA_VOLT#</span></div>
+                        <div class="item-after col4"><span id="#WALVOLA_ID#-badge" class="badge #WALVOLA_STATE_CLASS#">#WALVOLA_STATE#</span></div>
                       </div>
                     </div>
                     <div class="swipeout-actions-right">
@@ -218,6 +229,7 @@ function add_update_walvola(mqtt_mex) {
     html = html.replace(/#WALVOLA_LABEL#/g, mqtt_mex.label);
     html = html.replace(/#WALVOLA_ID#/g, mqtt_mex.src);
     html = html.replace(/#WALVOLA_VOLT#/g, mqtt_mex.value.voltage);
+    html = html.replace(/#WALVOLA_TIME#/g, mqtt_mex.time.substring(12,20).split('-').join(':'));
     html = html.replace(/#WALVOLA_STATE#/g, mqtt_mex.value.state);
     if (mqtt_mex.value.state == "ON")
         bg_state_class = "bg-green"
