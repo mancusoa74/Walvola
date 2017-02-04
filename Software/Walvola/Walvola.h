@@ -44,16 +44,16 @@ extern "C"
 
 #define DEBUG              0           //1=enable DEBUG mode; 0=disble debug mode
 #define MQTT_DEBUG         1           //1=enable MQTT DEBUG mode; 0=disble MQTT debug mode; post debug message to a /debug topic
-#define VERSION            "v1.4.1(00002)" 
+#define EEPROM_ENABLE      1           //1=enable storage of status in EEPROM; 0=disable for debug with short sleep period
+#define VERSION            "v1.5.0(00003)" 
 #define SERIAL_SPEED       115200
 #define SERIAL_INIT_DELAY  10
 #define WALVOLA_DELAY_ON   35000       //time (ms) for which the walvola motor is activated to open the walvola
 #define WALVOLA_DELAY_OFF  35000       //time (ms) for which the walvola motor is activated to close the walvola
-#define WALVOLA_LABEL      "YOUR UNIQUE VALVOLA NAME"   //walvola name which is shown on mobile APP
-#define WALVOLA_ID         "YOUR UNIQUE VALVOLA ID" //unique id of the walvola. it is used to define MQTT topic for communications with mobile app
+#define WALVOLA_LABEL      "Salone Destra"   //walvola name which is shown on mobile APP
+#define WALVOLA_ID         "walvola03" //unique id of the walvola. it is used to define MQTT topic for communications with mobile app
 
 #if DEBUG == 0
-//  #define WALVOLA_DEFAULT_DEEP_SLEEP_PERIOD 600 //deep sleep period in seconds (10 minutes)
   #define WALVOLA_DEFAULT_DEEP_SLEEP_PERIOD 900 //deep sleep period in seconds (15 minutes)
   #define WALVOLA_DEFAULT_SLEEP_PERIOD 600000L  //modem sleep perion in ms (10 minutes) 
   #define WALVOLA_SLEEP_DELAY 300000            //loop delay in ms

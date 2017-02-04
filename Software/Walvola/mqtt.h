@@ -21,7 +21,7 @@
 
 //forward declaration
 extern const String mqtt_client_id;
-int MQTT_init();
+int MQTT_init(boolean mqtt_subscribe);
 void mqtt_disconnect() ;
 void mqtt_log(String mex);
 

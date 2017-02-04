@@ -2,6 +2,7 @@
 #Author:   Antonio Mancuso
 #Purpose:  Walvola: code to run on any SMHA esp8266-01/12 module. This code can impersonate different roles
 
+#Version:  1.5 -   04/02/2017 - control eeprom use trhough define - wifi disable during motor action to save energy
 #Version:  1.4.1 - 22/01/2017 - fixing time calculation
 #Version:  1.4   - 21/01/2017 - replacing  www.timeapi.org as this service is not available anymore   
 #Version:  1.3   - 11/01/2017 - clean up for publishing on github - Teleram disbale due to some issue with SSL https://github.com/espressif/ESP8266_MESH_DEMO/issues/19 - https://github.com/esp8266/Arduino/issues/1375
@@ -44,7 +45,9 @@ void setup()
         // walvola should maintain the status (ON/OFF) as it a battery powered device. in case battery discharges the status of walvola is not changing as the motor is not spinning
         // irb is driving a relay,so in case power is removed the relay switch back to normal position and status reset so we don't need to keep status for it
         #ifdef WALVOLA_ROLE
+        #if EEPROM_ENABLE == 1
                 eeprom_init();
+        
 
                 //get the status of walvola in eeprom and if not set, set it to WALVOLA_ON (default status of walvola)
                 if ((walvola_status = get_eeprom_walvola_status()) == "EEPROM_NOT_SET") {
@@ -55,6 +58,7 @@ void setup()
 
                 log("Inital Walvola Status = ");
                 log(walvola_status);
+        #endif
         #endif
 
         //basic initialization of the two GPIO pins used by Walvola and IRB
@@ -72,23 +76,19 @@ void setup()
                 //4- check if MQTT message is available and process it
                 if (WiFi.status() != WL_CONNECTED) {
                         log("WiFi connecting...");
-                        start_inet_connectivity();  
+                        log("start_inet_connectivity(true)");  
+                        start_inet_connectivity(true);  
                 }
 
                 // get voltage from power source and post it to https://keen.io service
                 log("KEEN VOLTAGE");
                 keen_voltage();
-
-                //disconnet from Wifi - this might be skipped
-                if (WiFi.status() == WL_CONNECTED) {
-                        log("WiFi disconnecting...");
-                        stop_inet_connectivity();
-                }
-
+                
                 //if devie is NOT in OTA_MODE goes to deep_sleep for WALVOLA_DEFAULT_DEEP_SLEEP_PERIOD seconds
                 if (!update_mode) {
                         log("going to DEEP SLEEP");
                         ESP.deepSleep(WALVOLA_DEFAULT_DEEP_SLEEP_PERIOD * 1000000);
+                        delay(100); //candidate to go into 1.4.2
                 } 
                 
                 log("Entering OTA mode...");
@@ -109,7 +109,8 @@ void loop()
                 if (millis() > (last_schedule  + walvola_sleep_period)) {
                         if (WiFi.status() != WL_CONNECTED) {
                                 log("WiFi connecting...");
-                                start_inet_connectivity();
+                                log("start_inet_connectivity(true)");  
+                                start_inet_connectivity(true);
                         }
 
                         keen_voltage();

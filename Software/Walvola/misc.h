@@ -48,7 +48,7 @@ void set_irb(String state);
 void set_walvola(String state);
 void logzio_debug(String mex);
 void stop_inet_connectivity();
-void start_inet_connectivity();
+void start_inet_connectivity(boolean mqtt_subscribe);
 void set_walvola_status(String state);
 void eeprom_init();
 String get_eeprom_walvola_status();

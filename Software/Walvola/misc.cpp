@@ -169,6 +169,8 @@ void set_irb(String state)
 //wrapper to drive Walvola status
 void set_walvola(String state)
 {
+    stop_inet_connectivity();
+    
 //  if (state == WALVOLA_ON &&  walvola_status == WALVOLA_OFF) { // as I do not implement encoder controlled motor, I should implement this logic. for the time being disabled
         if (state == WALVOLA_ON) {
                 log("Opening walvola.........");
@@ -184,8 +186,10 @@ void set_walvola(String state)
                 walvola_status = WALVOLA_ON;
 
                 //store status in EEPROM
+                #if EEPROM_ENABLE == 1
                 set_eeprom_walvola_status(walvola_status);
-
+                #endif
+                
                 //telegram notification to bot
                 log("walvola open SUCCESS");
                 tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] APERTA");
@@ -201,33 +205,40 @@ void set_walvola(String state)
                 motor_off();
                 walvola_status = WALVOLA_OFF;
 
+                #if EEPROM_ENABLE == 1
                 set_eeprom_walvola_status(walvola_status);
-
+                #endif
+                
                 log("walvola close SUCCESS");
                 tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] CHIUSA");
-        }       
+        }      
+
+        log("start_inet_connectivity(false)");  
+        start_inet_connectivity(false);
 }
 
 //stop communication to external world
 void stop_inet_connectivity()
 {
+        log("STOP WIFI CONNECTIVITY");
         mqtt_disconnect();
 
         //is modem sleep mode we need to peroperly set ESP8266
-        #ifdef WALVOLA_MODEM_SLEEP_MODE
+        //#ifdef WALVOLA_MODEM_SLEEP_MODE
                wifi_disconnect();
-        #endif
+        //#endif
 
         inet_connected = false;
 }
 
 //start communication to external world
-void start_inet_connectivity()
+void start_inet_connectivity(boolean mqtt_subscribe)
 {
+        log("START WIFI CONNECTIVITY");
         //in modem sleep need to explicitly wake up the EPS8266
-        #ifdef WALVOLA_MODEM_SLEEP_MODE
+        //#ifdef WALVOLA_MODEM_SLEEP_MODE
                wifi_wakeup();
-        #endif
+        //#endif
 
         //connect to wifi
         if (WiFi_init() != WL_CONNECTED) {
@@ -242,7 +253,7 @@ void start_inet_connectivity()
                 walvola_time = get_web_time();
 
                 ///init MQTT connectiont o broker and MQTT call back and process MQTT message
-                if (MQTT_init()) {
+                if (MQTT_init(mqtt_subscribe)) {
                         //in IRB mode let's switch ON the ready led
                         #ifdef IRB_ROLE
                                 irb_ready();

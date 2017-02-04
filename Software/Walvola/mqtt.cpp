@@ -152,7 +152,7 @@ void reply_CMD_GET_INFO()
         //debug
         tgram_sendmex("GET INFO");
         
-        String jreply = "{\"time\":\"" + walvola_time + "\", \"src\":\"" + String(WALVOLA_ID) + "\", \"dst\": \"allcontollers\", \"label\" : \"" + String(WALVOLA_LABEL) + "\", \"type\": \"REPLY\", \"cmd\":\"" + CMD_GET_INFO + "\",\"value\": {\"version\":\"" + String(VERSION) + "\", {\"voltage\":\"" + voltage + "\", \"state\":\"" + walvola_status + "\", \"IP ADDRESS\":\"" + ip + "\"}}";
+        String jreply = "{\"time\":\"" + walvola_time + "\", \"src\":\"" + String(WALVOLA_ID) + "\", \"dst\": \"allcontollers\", \"label\" : \"" + String(WALVOLA_LABEL) + "\", \"type\": \"REPLY\", \"cmd\":\"" + CMD_GET_INFO + "\",\"value\": {\"version\":\"" + String(VERSION) + "DEBUG[" + String(DEBUG) + "]" + "\", {\"voltage\":\"" + voltage + "\", \"state\":\"" + walvola_status + "\", \"IP ADDRESS\":\"" + ip + "\"}}";
         log(jreply);
 
         mqtt_client.publish(mqtt_controllers_topic, jreply);
@@ -219,7 +219,7 @@ void mqtt_callback(const MQTT::Publish& pub)
 }
 
 //MQTT initialization
-int MQTT_init()
+int MQTT_init(boolean topic_subscribe)
 {
         log("Initializing MQTT communication.........");
         log(mqtt_client_id);
@@ -234,22 +234,24 @@ int MQTT_init()
                 log("Connection to MQTT broker SUCCESS..........");
 
         //MQTT subscribe to walvola topic (client -> walvola)
-                if (mqtt_client.subscribe(mqtt_walvolas_topic)) {
-                        log("Subscription to MQTT topic [" + mqtt_walvolas_topic + "] SUCCESS.........");
-                        log("MQTT Client loop init");
-
-                        //now that we are sucesfully subscriber to our incoming topic (mqtt_walvolas_topic)
-                        //we can check whether there is a message waiting for our processing
-                        //as after subscription the message is not immediately avaialble let's retry few times to be sure we are not missing any available message
-                        for (int i = 0; i < 5; i++) {
-                                mqtt_client.loop();
-                                log("MQTT client loop");
-                        delay(100);
+                if (topic_subscribe) {
+                        if (mqtt_client.subscribe(mqtt_walvolas_topic)) {
+                                log("Subscription to MQTT topic [" + mqtt_walvolas_topic + "] SUCCESS.........");
+                                log("MQTT Client loop init");
+        
+                                //now that we are sucesfully subscriber to our incoming topic (mqtt_walvolas_topic)
+                                //we can check whether there is a message waiting for our processing
+                                //as after subscription the message is not immediately avaialble let's retry few times to be sure we are not missing any available message
+                                for (int i = 0; i < 5; i++) {
+                                        mqtt_client.loop();
+                                        log("MQTT client loop");
+                                delay(100);
+                                }
+                                log("MQTT Client loop finish");
+                        } else {
+                                log("MQTT unable to subscribe to [" + mqtt_walvolas_topic + "] ERROR.........");
+                                return false;
                         }
-                        log("MQTT Client loop finish");
-                } else {
-                        log("MQTT unable to subscribe to [" + mqtt_walvolas_topic + "] ERROR.........");
-                        return false;
                 }
         } else {
                 log("Connection to MQTT broker ERROR..........");

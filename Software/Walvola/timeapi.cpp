@@ -84,6 +84,7 @@ String get_web_time()
         int date_start = html.indexOf("Date"); //identify the Date in the http reponse
         int date_end = html.indexOf("GMT");
         
+        //String raw_timestamp = html.substring(date_start + 11, date_end - 4); //get the timestamp as provided (i.e Sat, 21 Jan 2017 13:42:08)
         String raw_timestamp = html.substring(date_start + 11, date_end - 1 ); //get the timestamp as provided (i.e Sat, 21 Jan 2017 13:42:08)
         String year = raw_timestamp.substring(7,11);  //get the year         
         String month = zero_padding(month2index(raw_timestamp.substring(3,6)));  //get month string and convert to month number with padding
@@ -93,6 +94,7 @@ String get_web_time()
         String mm = raw_timestamp.substring(15,17); //get the minutes
         String ss = raw_timestamp.substring(18,20); //get the seconds
         
+        //String timestamp = year + "-" + month + "-" + day + "--" + hh + "-" + mm + "-00"; //build timestamp in expected format
         String timestamp = year + "-" + month + "-" + day + "--" + hh + "-" + mm + "-" + ss; //build timestamp in expected format
         
         log("TIMESTAMP:");

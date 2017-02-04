@@ -18,14 +18,16 @@ int WiFi_init()
         log("Connecting to WiFi AP..........");
 
         WiFi.mode(WIFI_STA);
+        
         WiFi.begin(wifi_ssid, wifi_passwd); //start connecting to WiFi AP
-
         //check the status of WiFi connection to be WL_CONNECTED
         while ((WiFi.status() != WL_CONNECTED) && (retries < MAX_WIFI_INIT_RETRY)) {
                retries++;
                 delay(WIFI_RETRY_DELAY);
                 log("#");
         }
+
+        log(WiFi.localIP()[0] + "." + WiFi.localIP()[1] + "." +WiFi.localIP()[2] + "." +WiFi.localIP()[3]);
 
         return WiFi.status(); //return the WiFi connection status
 }
