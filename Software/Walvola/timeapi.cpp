@@ -1,6 +1,6 @@
 #include "timeapi.h"
 
-String months[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+//String months[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 //the www.timeapi.org servce is not availabvle anymore on the Internet
 //for this reason I have replaced it with querying google home page
@@ -10,6 +10,7 @@ String months[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Se
 //helper function to convert month from literal format to month number
 int month2index (String month) 
 {
+        String months[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
         for (int i = 0; i < 12; i++) {
                 if (months[i] == month)
                         return i + 1;  
@@ -124,4 +125,5 @@ int get_web_time_seconds(String timestamp)
         //2016-12-01--22-09-02
         return timestamp.substring(18, 20).toInt();
 }
+
 

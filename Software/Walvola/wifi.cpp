@@ -1,18 +1,22 @@
 #include "wifi.h"
 
-const char* wifi_ssid   = "YOUR WIFI SSID";                     //your Wifi SSID
-const char* wifi_passwd = "YOUE WIFI PASSWORD"; //your wifi password
+//const char* wifi_ssid   = "YOUR WIFI SSID";                     //your Wifi SSID
+//const char* wifi_passwd = "YOUE WIFI PASSWORD"; //your wifi password
 WiFiClient wifi_client;
 
 //initialize OTA mode
 #ifdef OTA_MODE
         ESP8266WebServer httpServer(OTA_PORT);
-        ESP8266HTTPUpdateServer httpUpdater;
+//      ESP8266HTTPUpdateServer httpUpdater;
 #endif
+
 
 //connect to wifi
 int WiFi_init()
 {
+        const char* wifi_ssid   = "YOUR WIFI SSID";                     //your Wifi SSID
+        const char* wifi_passwd = "YOUE WIFI PASSWORD"; //your wifi password
+          
         int retries = 0;
 
         log("Connecting to WiFi AP..........");
@@ -63,9 +67,12 @@ void wifi_disconnect()
 #ifdef OTA_MODE
 void OTA_init()
 {
+        ESP8266HTTPUpdateServer httpUpdater;
+        
         httpUpdater.setup(&httpServer);
         httpServer.begin();
         MDNS.addService("http", "tcp", OTA_PORT);
 }
 #endif
+
 

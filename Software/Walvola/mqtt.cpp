@@ -150,7 +150,7 @@ void reply_CMD_GET_INFO()
         log("Preparing json reply.........");
 
         //debug
-        tgram_sendmex("GET INFO");
+        //tgram_sendmex("GET INFO");
         
         String jreply = "{\"time\":\"" + walvola_time + "\", \"src\":\"" + String(WALVOLA_ID) + "\", \"dst\": \"allcontollers\", \"label\" : \"" + String(WALVOLA_LABEL) + "\", \"type\": \"REPLY\", \"cmd\":\"" + CMD_GET_INFO + "\",\"value\": {\"version\":\"" + String(VERSION) + "DEBUG[" + String(DEBUG) + "]" + "\", {\"voltage\":\"" + voltage + "\", \"state\":\"" + walvola_status + "\", \"IP ADDRESS\":\"" + ip + "\"}}";
         log(jreply);
@@ -278,3 +278,4 @@ void mqtt_disconnect()
         log("Disconnecting MQTT");
         mqtt_client.disconnect();
 }
+

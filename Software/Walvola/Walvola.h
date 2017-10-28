@@ -12,6 +12,7 @@ extern "C"
 }
 
 
+
 #include <WiFiClient.h>
 #include <WiFiClientSecure.h>
 #include <ESP8266WiFi.h>
@@ -19,11 +20,12 @@ extern "C"
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266HTTPUpdateServer.h>
-#include <ESPTelegramBot.h>
+//#include <ESPTelegramBot.h>
 #include <MQTT.h>
 #include <PubSubClient.h>
 #include <jsmn.h> //https://github.com/zserge/jsmn
 #include <Arduino.h>
+#include <pgmspace.h>
 #include "keen.h"
 #include "misc.h"
 #include "telegram.h"
@@ -36,22 +38,22 @@ extern "C"
  * =========== Global defines to configure behavior ===========
 */
 
-#define WALVOLA_DEEP_SLEEP_MODE  //uncomment to enable deep sleep mode
-//#define WALVOLA_MODEM_SLEEP_MODE //uncomment to enable modem sleep mode
-#define WALVOLA_ROLE             //code behaves as a Walvola http://mancusoa74.blogspot.it/2017/01/come-aggiungere-il-controllo-wireless.html
-//#define IRB_ROLE                 //code behaves as a IRB http://mancusoa74.blogspot.it/2015/11/internet-relay-board-v2.html
-#define OTA_MODE                 //uncomment to enable OTA software upgrade http://esp8266.github.io/Arduino/versions/2.0.0/doc/ota_updates/ota_updates.html#web-browser
+//#define WALVOLA_DEEP_SLEEP_MODE  //uncomment to enable deep sleep mode
+#define WALVOLA_MODEM_SLEEP_MODE //uncomment to enable modem sleep mode
+//#define WALVOLA_ROLE             //code behaves as a Walvola http://mancusoa74.blogspot.it/2017/01/come-aggiungere-il-controllo-wireless.html
+#define IRB_ROLE                 //code behaves as a IRB http://mancusoa74.blogspot.it/2015/11/internet-relay-board-v2.html
+//#define OTA_MODE                 //uncomment to enable OTA software upgrade http://esp8266.github.io/Arduino/versions/2.0.0/doc/ota_updates/ota_updates.html#web-browser
 
-#define DEBUG              0           //1=enable DEBUG mode; 0=disble debug mode
-#define MQTT_DEBUG         1           //1=enable MQTT DEBUG mode; 0=disble MQTT debug mode; post debug message to a /debug topic
-#define EEPROM_ENABLE      1           //1=enable storage of status in EEPROM; 0=disable for debug with short sleep period
-#define VERSION            "v1.5.0(00003)" 
+#define DEBUG              1           //1=enable DEBUG mode; 0=disble debug mode
+#define MQTT_DEBUG         0           //1=enable MQTT DEBUG mode; 0=disble MQTT debug mode; post debug message to a /debug topic
+#define EEPROM_ENABLE      0           //1=enable storage of status in EEPROM; 0=disable for debug with short sleep period
+#define VERSION            "v1.5.2(00001)" 
 #define SERIAL_SPEED       115200
 #define SERIAL_INIT_DELAY  10
 #define WALVOLA_DELAY_ON   35000       //time (ms) for which the walvola motor is activated to open the walvola
 #define WALVOLA_DELAY_OFF  35000       //time (ms) for which the walvola motor is activated to close the walvola
-#define WALVOLA_LABEL      "Salone Destra"   //walvola name which is shown on mobile APP
-#define WALVOLA_ID         "walvola03" //unique id of the walvola. it is used to define MQTT topic for communications with mobile app
+#define WALVOLA_LABEL      "YOUR UNIQUE VALVOLA NAME"   //walvola name which is shown on mobile APP
+#define WALVOLA_ID         "walvola99" //unique id of the walvola. it is used to define MQTT topic for communications with mobile app
 
 #if DEBUG == 0
   #define WALVOLA_DEFAULT_DEEP_SLEEP_PERIOD 900 //deep sleep period in seconds (15 minutes)
@@ -59,8 +61,8 @@ extern "C"
   #define WALVOLA_SLEEP_DELAY 300000            //loop delay in ms
 #else
   #define WALVOLA_DEFAULT_DEEP_SLEEP_PERIOD 15  //debug
-  #define WALVOLA_DEFAULT_SLEEP_PERIOD 10000L   //debug
-  #define WALVOLA_SLEEP_DELAY 5000 //debug
+  #define WALVOLA_DEFAULT_SLEEP_PERIOD 1000L   //debug
+  #define WALVOLA_SLEEP_DELAY 500 //debug
 #endif
 
 #define WALVOLA_NIGHT_SLEEP_PERIOD 18000000L   //night modem sleep period (5 hrs)
@@ -70,7 +72,8 @@ extern boolean inet_connected;
 extern boolean update_mode;
 
 //---------- SUPPORT MACRO AND DEFINITION ----------
-//#define log(mex) if (DEBUG) {Serial.println(walvola_time + "::" + mex);Serial.flush();}
-#define log(mex) if (DEBUG) {Serial.println(walvola_time + "::" + mex);Serial.flush(); if(MQTT_DEBUG) {mqtt_log(walvola_time + "::" + mex);}}
+//#define log(mex) if (DEBUG) {Serial.println(walvola_time + "::" + mex);Serial.flush(); if(MQTT_DEBUG) {mqtt_log(walvola_time + "::" + mex);}}
+#define log(mex) if (DEBUG) {Serial.println(walvola_time + "::" + mex);Serial.flush();}
 
 #endif
+

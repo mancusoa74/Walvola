@@ -7,11 +7,12 @@ struct kv {
 };
 
 struct kv JSONkvs[JSON_KVS];
-char JSON_STRING[JSON_MEX_MAX_SIZE];
+//char JSON_STRING[JSON_MEX_MAX_SIZE];
 
 //parse an incoming json message from MQTT to json object
 int mqtt2JSONkvs(String mex)
 {
+        char JSON_STRING[JSON_MEX_MAX_SIZE];
         jsmn_parser p;
         jsmntok_t t[JSON_KVS * 2];
 
@@ -58,3 +59,4 @@ String getJSONvalue(char * key)
         }
         return "";
 }
+

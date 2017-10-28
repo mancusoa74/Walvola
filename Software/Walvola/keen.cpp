@@ -14,6 +14,7 @@ void keen_post(String collection, String data)
         http.begin(url);
         log("HTTP BEGIN");
         http.addHeader("Authorization", KEEN_MASTER_KEY, false, false); //this is important to get authorization to POST data to collection
+        
         http.addHeader("Content-Type", "application/json", false, false);
 
         if(http.POST(data) == HTTP_CODE_CREATED) {
@@ -24,3 +25,4 @@ void keen_post(String collection, String data)
 
         http.end();
 }
+

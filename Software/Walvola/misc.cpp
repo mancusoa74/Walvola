@@ -154,7 +154,7 @@ void set_irb(String state)
                 log("Relay open SUCCESS....");
 
                 //now we send a telegram notification to the heating system bot to notify user of status change
-                tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] APERTA"); 
+                //tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] APERTA"); 
         } 
 
         if(state == RELAY_OFF) {
@@ -162,7 +162,7 @@ void set_irb(String state)
                 relay_status = RELAY_OFF;
                 irb_relay_off();
                 log("Relay close SUCCESS....");
-                tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] CHIUSA");
+                //tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] CHIUSA");
         }
 }
 
@@ -192,7 +192,7 @@ void set_walvola(String state)
                 
                 //telegram notification to bot
                 log("walvola open SUCCESS");
-                tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] APERTA");
+                //tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] APERTA");
         }
   //if (state == WALVOLA_OFF &&  walvola_status == WALVOLA_ON) {
         if (state == WALVOLA_OFF) {
@@ -210,7 +210,7 @@ void set_walvola(String state)
                 #endif
                 
                 log("walvola close SUCCESS");
-                tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] CHIUSA");
+                //tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] CHIUSA");
         }      
 
         log("start_inet_connectivity(false)");  
@@ -269,26 +269,27 @@ void start_inet_connectivity(boolean mqtt_subscribe)
 //this function change the modem sleep period based on the current time
 //from midnight to 5AM let's skeep. this is done to increase battery duration
 //however I am deprecating this as walvola is ALWAYS in deep sleep mode
-unsigned long dynamic_sleep_period()
-{
-        unsigned long walvola_delay = 0L;
+//unsigned long dynamic_sleep_period()
+//{
+//        unsigned long walvola_delay = 0L;
+//
+//        log("Calculating dynamic sleep period for walvola...");
+//
+//        String current_time = get_web_time();
+//        log("current time:");
+//        log(current_time);
+//
+//        int current_hour = get_web_time_hours(current_time);
+//        log("current hour:");
+//        log(current_hour);
+//
+//        if ((current_hour >= 0) && (current_hour <= 4)) {
+//                log("night time");
+//                walvola_delay = WALVOLA_NIGHT_SLEEP_PERIOD;
+//        } else {
+//                log("day time");
+//                walvola_delay = WALVOLA_DEFAULT_SLEEP_PERIOD;
+//        }
+//        return walvola_delay;
+//}
 
-        log("Calculating dynamic sleep period for walvola...");
-
-        String current_time = get_web_time();
-        log("current time:");
-        log(current_time);
-
-        int current_hour = get_web_time_hours(current_time);
-        log("current hour:");
-        log(current_hour);
-
-        if ((current_hour >= 0) && (current_hour <= 4)) {
-                log("night time");
-                walvola_delay = WALVOLA_NIGHT_SLEEP_PERIOD;
-        } else {
-                log("day time");
-                walvola_delay = WALVOLA_DEFAULT_SLEEP_PERIOD;
-        }
-        return walvola_delay;
-}

@@ -1,8 +1,10 @@
-/*
+ /*
 #Author:   Antonio Mancuso
 #Purpose:  Walvola: code to run on any SMHA esp8266-01/12 module. This code can impersonate different roles
 
-#Version:  1.5 -   04/02/2017 - control eeprom use trhough define - wifi disable during motor action to save energy
+#Version:  1.5.2 - 11/02/2017 - adding reset after deep sleep
+#Version:  1.5.1 - 05/02/2017 - fixing telegram notification (28% 295513 and 58% 48168 are needed for telegram to work SSL certificate)
+#Version:  1.5   - 04/02/2017 - control eeprom use trhough define - wifi disable during motor action to save energy
 #Version:  1.4.1 - 22/01/2017 - fixing time calculation
 #Version:  1.4   - 21/01/2017 - replacing  www.timeapi.org as this service is not available anymore   
 #Version:  1.3   - 11/01/2017 - clean up for publishing on github - Teleram disbale due to some issue with SSL https://github.com/espressif/ESP8266_MESH_DEMO/issues/19 - https://github.com/esp8266/Arduino/issues/1375
@@ -24,8 +26,9 @@
 /*
  * =========== Global variables to configure behavior ===========
 */
+//const PROGMEM String keen_voltage_collection = "YOUR KEEN.IO VOLTAGE COLLECTION" + String(WALVOLA_LABEL); //I post voltage value to a https://keen.io collection for statistics and chart
 const String keen_voltage_collection = "YOUR KEEN.IO VOLTAGE COLLECTION" + String(WALVOLA_LABEL); //I post voltage value to a https://keen.io collection for statistics and chart
-unsigned long walvola_sleep_period   = WALVOLA_DEFAULT_SLEEP_PERIOD;
+//unsigned long walvola_sleep_period = WALVOLA_DEFAULT_SLEEP_PERIOD;
 String walvola_time                  = "1970-01-01--00-00-00"; //default time in honor of Unix
 boolean inet_connected               = false; //track whether connected to Internet or not
 boolean update_mode                  = false; //track whether the walvola is in OTA update mode
@@ -37,10 +40,29 @@ void setup()
         if (DEBUG){ 
                 Serial.begin(SERIAL_SPEED);
                 delay(SERIAL_INIT_DELAY);
-                log("");
+                log(" ");
                 log("Walvola Software " + String(VERSION) + " starting ..........");
                 log(mqtt_client_id);
         }
+
+//        enum rst_reason {
+//                REASON_DEFAULT_RST              = 0,    /* normal startup by power on */
+//                REASON_WDT_RST                  = 1,    /* hardware watch dog reset */
+//                REASON_EXCEPTION_RST    = 2,    /* exception reset, GPIO status wonâ€™t change */
+//                REASON_SOFT_WDT_RST     = 3,    /* software watch dog reset, GPIO status wonâ€™t change */
+//                REASON_SOFT_RESTART     = 4,    /* software restart ,system_restart , GPIO status wonâ€™t change */
+//                REASON_DEEP_SLEEP_AWAKE = 5,    /* wake up from deep-sleep */
+//                REASON_EXT_SYS_RST      = 6             /* external system reset */
+//        };
+
+        #ifdef WALVOLA_ROLE
+            rst_info *rinfo = ESP.getResetInfoPtr();
+            log(String("ResetInfo.reason = ") + (*rinfo).reason); 
+            if ((*rinfo).reason == REASON_DEEP_SLEEP_AWAKE) {
+                    log("boot from deep sleep --> reset") ;
+                    ESP.restart() ;
+            }
+        #endif
 
         // walvola should maintain the status (ON/OFF) as it a battery powered device. in case battery discharges the status of walvola is not changing as the motor is not spinning
         // irb is driving a relay,so in case power is removed the relay switch back to normal position and status reset so we don't need to keep status for it
@@ -63,7 +85,7 @@ void setup()
 
         //basic initialization of the two GPIO pins used by Walvola and IRB
         GPIO_init();
-
+        
         //this is the main code executed for device in DEEP_SLEEP_MODE as loop will be empty
         //in my setup walvola is ESP8266-12 so I use deep sleep
         #ifdef WALVOLA_DEEP_SLEEP_MODE
@@ -83,12 +105,14 @@ void setup()
                 // get voltage from power source and post it to https://keen.io service
                 log("KEEN VOLTAGE");
                 keen_voltage();
+
+                //tgram_sendmex("telegram sent"); 
                 
                 //if devie is NOT in OTA_MODE goes to deep_sleep for WALVOLA_DEFAULT_DEEP_SLEEP_PERIOD seconds
                 if (!update_mode) {
                         log("going to DEEP SLEEP");
                         ESP.deepSleep(WALVOLA_DEFAULT_DEEP_SLEEP_PERIOD * 1000000);
-                        delay(100); //candidate to go into 1.4.2
+                        delay(500); //candidate to go into 1.4.2
                 } 
                 
                 log("Entering OTA mode...");
@@ -106,7 +130,7 @@ void loop()
         //in my setup walvola is ESP8266-01 so I use modem sleep
         //most of the logic is the same as for deep sleep
         #ifdef WALVOLA_MODEM_SLEEP_MODE
-                if (millis() > (last_schedule  + walvola_sleep_period)) {
+                if (millis() > (last_schedule  + WALVOLA_DEFAULT_SLEEP_PERIOD)) {
                         if (WiFi.status() != WL_CONNECTED) {
                                 log("WiFi connecting...");
                                 log("start_inet_connectivity(true)");  
@@ -117,10 +141,10 @@ void loop()
                         last_schedule = millis();
 
                         //to increase the duration of batteries during night time the sleep time is increased to 4 hrs
-                        walvola_sleep_period = dynamic_sleep_period();
+                        //walvola_sleep_period = dynamic_sleep_period();
 
-                        log("Calculated dynamic walvola sleep time is:");
-                        log(walvola_sleep_period);
+                        //log("Calculated dynamic walvola sleep time is:");
+                        //log(walvola_sleep_period);
                 } else {
                         if (WiFi.status() == WL_CONNECTED) {
                                 log("WiFi disconnecting...");
@@ -132,3 +156,4 @@ void loop()
                 }
         #endif
 }
+

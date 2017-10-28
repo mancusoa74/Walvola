@@ -53,6 +53,7 @@ void set_walvola_status(String state);
 void eeprom_init();
 String get_eeprom_walvola_status();
 void set_eeprom_walvola_status(String status);
-unsigned long dynamic_sleep_period();
+//unsigned long dynamic_sleep_period();
 
 #endif
+
