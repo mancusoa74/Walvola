@@ -3,7 +3,6 @@
 
 #include "Walvola.h"
 
-
 #define MQTT_UNAME       "YOUR MQTT BROKER ACCOUNT USER NAME"     //MQTT brokor user name - I use tis broker https://www.cloudmqtt.com/
 #define MQTT_PASSW       "YOUR MQTT BROKER ACCOUNT PASSWORD" //MQTT broker passowrd
 #define MQTT_BROKER_PORT 17780          //MQTT BROKER listening port

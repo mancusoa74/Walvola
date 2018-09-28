@@ -2,6 +2,7 @@
 #Author:   Antonio Mancuso
 #Purpose:  Walvola: code to run on any SMHA esp8266-01/12 module. This code can impersonate different roles
 
+#Version   2.0.0 - summer 2017 - adding WAC support
 #Version:  1.5.2 - 11/02/2017 - adding reset after deep sleep
 #Version:  1.5.1 - 05/02/2017 - fixing telegram notification (28% 295513 and 58% 48168 are needed for telegram to work SSL certificate)
 #Version:  1.5   - 04/02/2017 - control eeprom use trhough define - wifi disable during motor action to save energy
@@ -28,6 +29,7 @@
 */
 //const PROGMEM String keen_voltage_collection = "YOUR KEEN.IO VOLTAGE COLLECTION" + String(WALVOLA_LABEL); //I post voltage value to a https://keen.io collection for statistics and chart
 const String keen_voltage_collection = "YOUR KEEN.IO VOLTAGE COLLECTION" + String(WALVOLA_LABEL); //I post voltage value to a https://keen.io collection for statistics and chart
+
 //unsigned long walvola_sleep_period = WALVOLA_DEFAULT_SLEEP_PERIOD;
 String walvola_time                  = "1970-01-01--00-00-00"; //default time in honor of Unix
 boolean inet_connected               = false; //track whether connected to Internet or not
@@ -55,18 +57,18 @@ void setup()
 //                REASON_EXT_SYS_RST      = 6             /* external system reset */
 //        };
 
-        #ifdef WALVOLA_ROLE
-            rst_info *rinfo = ESP.getResetInfoPtr();
-            log(String("ResetInfo.reason = ") + (*rinfo).reason); 
-            if ((*rinfo).reason == REASON_DEEP_SLEEP_AWAKE) {
-                    log("boot from deep sleep --> reset") ;
-                    ESP.restart() ;
-            }
-        #endif
+//        #if defined(WALVOLA_ROLE) || defined(WAC_ROLE)
+//            rst_info *rinfo = ESP.getResetInfoPtr();
+//            log(String("ResetInfo.reason = ") + (*rinfo).reason); 
+//            if ((*rinfo).reason == REASON_DEEP_SLEEP_AWAKE) {
+//                    log("boot from deep sleep --> reset") ;
+//                    ESP.restart() ;
+//            }
+//        #endif
 
         // walvola should maintain the status (ON/OFF) as it a battery powered device. in case battery discharges the status of walvola is not changing as the motor is not spinning
         // irb is driving a relay,so in case power is removed the relay switch back to normal position and status reset so we don't need to keep status for it
-        #ifdef WALVOLA_ROLE
+        #if defined(WALVOLA_ROLE) || defined(WAC_ROLE)
         #if EEPROM_ENABLE == 1
                 eeprom_init();
         
@@ -110,6 +112,8 @@ void setup()
                 
                 //if devie is NOT in OTA_MODE goes to deep_sleep for WALVOLA_DEFAULT_DEEP_SLEEP_PERIOD seconds
                 if (!update_mode) {
+//                        stop_inet_connectivity();
+//                        delay(5000);
                         log("going to DEEP SLEEP");
                         ESP.deepSleep(WALVOLA_DEFAULT_DEEP_SLEEP_PERIOD * 1000000);
                         delay(500); //candidate to go into 1.4.2

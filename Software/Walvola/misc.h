@@ -3,7 +3,7 @@
 
 #include "Walvola.h"
 
-#ifdef WALVOLA_ROLE //ESP8266-12
+#if defined(WALVOLA_ROLE) || defined(WAC_ROLE) //ESP8266-12
   #define GPIO2              4
   #define GPIO0              5
   #define GPIO_MOTOR_LEFT    5

@@ -1,4 +1,5 @@
 #include "misc.h"
+#include "ac.h"
 #include <EEPROM.h>
 
 String walvola_status = WALVOLA_ON; //initial Walvola status
@@ -117,6 +118,22 @@ void motor_off()
 #endif
 }
 
+void wac_on()
+{
+#ifdef WAC_ROLE 
+        ac_on();
+        log("WAC ON.........");
+#endif
+}
+
+void wac_off()
+{
+#ifdef WAC_ROLE 
+        ac_off();
+        log("WAC OFF.........");
+#endif
+}
+
 //turn IRB ready led
 void irb_ready()
 {
@@ -169,7 +186,7 @@ void set_irb(String state)
 //wrapper to drive Walvola status
 void set_walvola(String state)
 {
-    stop_inet_connectivity();
+    //stop_inet_connectivity();
     
 //  if (state == WALVOLA_ON &&  walvola_status == WALVOLA_OFF) { // as I do not implement encoder controlled motor, I should implement this logic. for the time being disabled
         if (state == WALVOLA_ON) {
@@ -179,10 +196,18 @@ void set_walvola(String state)
                 //wait for the proper time for walvola to open/close
                 //stop the motor
                 walvola_status = WALVOLA_TRANSITION;    
+                
+                #ifdef WALVOLA_ROLE
                 motor_off();
                 motor_right();
                 delay(WALVOLA_DELAY_ON);
                 motor_off();
+                #endif
+
+                #ifdef WAC_ROLE
+                wac_on();
+                #endif
+                
                 walvola_status = WALVOLA_ON;
 
                 //store status in EEPROM
@@ -199,10 +224,18 @@ void set_walvola(String state)
                 log("Closing walvola.........");
 
                 walvola_status = WALVOLA_TRANSITION;    
+                
+                #ifdef WALVOLA_ROLE
                 motor_off();
                 motor_left();
                 delay(WALVOLA_DELAY_OFF);
                 motor_off();
+                #endif
+
+                #ifdef WAC_ROLE
+                wac_off();
+                #endif
+                
                 walvola_status = WALVOLA_OFF;
 
                 #if EEPROM_ENABLE == 1
@@ -213,8 +246,8 @@ void set_walvola(String state)
                 //tgram_sendmex("Walvola[" + String(WALVOLA_LABEL) + "] CHIUSA");
         }      
 
-        log("start_inet_connectivity(false)");  
-        start_inet_connectivity(false);
+       // log("start_inet_connectivity(false)");  
+       // start_inet_connectivity(false);
 }
 
 //stop communication to external world

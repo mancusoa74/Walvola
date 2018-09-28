@@ -71,7 +71,7 @@ void reply_CMD_GET_STATUS()
 
         voltage = get_voltage();
         
-        #ifdef WALVOLA_ROLE
+        #if defined(WALVOLA_ROLE) || defined(WAC_ROLE)
                 String jreply = "{\"time\":\"" + walvola_time + "\", \"src\":\"" + String(WALVOLA_ID) + "\", \"dst\": \"allcontollers\", \"label\" : \"" + String(WALVOLA_LABEL) + "\", \"type\": \"REPLY\", \"cmd\":\"" + CMD_GET_STATUS + "\",\"value\": {\"voltage\":\"" + voltage + "\", \"state\":\"" + walvola_status + "\"}}";
         #endif
 
@@ -99,7 +99,7 @@ void reply_CMD_SET_STATUS(String mqtt_value)
         log(jreply);
         mqtt_publish_mex(mqtt_controllers_topic, jreply, true);
  
-        #ifdef WALVOLA_ROLE
+        #if defined(WALVOLA_ROLE) || defined(WAC_ROLE)
                 log("SET WALVOLA START");
                 set_walvola(mqtt_value);
                 log("SET WALVOLA END");
@@ -261,7 +261,7 @@ int MQTT_init(boolean topic_subscribe)
         //publish to controllers topic (walvola -> client) the walvola status
         String voltage = get_voltage();
 
-        #ifdef WALVOLA_ROLE
+        #if defined(WALVOLA_ROLE) || defined(WAC_ROLE)
                 String jreply = "{\"time\":\"" + walvola_time + "\", \"src\":\"" + String(WALVOLA_ID) + "\", \"dst\": \"allcontollers\", \"label\" : \"" + String(WALVOLA_LABEL) + "\", \"type\": \"REPLY\", \"cmd\":\"" + CMD_GET_STATUS + "\",\"value\": {\"voltage\":\"" + voltage + "\", \"state\":\"" + walvola_status + "\"}}"; 
         #endif
 
